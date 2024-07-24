@@ -26,7 +26,7 @@ add_library(json INTERFACE)
 target_include_directories(json INTERFACE ext/headers)
 
 # Main DRAMSim Lib
-add_library(dramsim3 SHARED
+add_library(dramsim3obj OBJECT
     src/bankstate.cc
     src/channel_state.cc
     src/command_queue.cc
@@ -54,37 +54,39 @@ if (THERMAL)
         HINTS ${PROJECT_SOURCE_DIR}/ext/SuperLU_MT_3.1/lib/
     )
 
-    target_link_libraries(dramsim3
+    target_link_libraries(dramsim3obj
         PRIVATE ${SUPERLU} f77blas atlas m ${OpenMP_C_FLAGS}
     )
-    target_sources(dramsim3
+    target_sources(dramsim3obj
         PRIVATE src/thermal.cc src/sp_ienv.c src/thermal_solver.c
     )
-    target_compile_options(dramsim3 PRIVATE -DTHERMAL -D_LONGINT -DAdd_ ${OpenMP_C_FLAGS})
+    target_compile_options(dramsim3obj PRIVATE -DTHERMAL -D_LONGINT -DAdd_ ${OpenMP_C_FLAGS})
 
     add_executable(thermalreplay src/thermal_replay.cc)
-    target_link_libraries(thermalreplay dramsim3 inih)
+    target_link_libraries(thermalreplay dramsim3obj inih)
     target_compile_options(thermalreplay PRIVATE -DTHERMAL -D_LONGINT -DAdd_ ${OpenMP_C_FLAGS})
 endif (THERMAL)
 
 if (CMD_TRACE)
-    target_compile_options(dramsim3 PRIVATE -DCMD_TRACE)
+    target_compile_options(dramsim3obj PRIVATE -DCMD_TRACE)
 endif (CMD_TRACE)
 
 if (ADDR_TRACE)
-    target_compile_options(dramsim3 PRIVATE -DADDR_TRACE)
+    target_compile_options(dramsim3obj PRIVATE -DADDR_TRACE)
 endif (ADDR_TRACE)
 
 
-target_include_directories(dramsim3 INTERFACE $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/src> $<INSTALL_INTERFACE:include>)
-target_compile_options(dramsim3 PRIVATE -Wall)
-target_link_libraries(dramsim3 PRIVATE inih format)
-set_target_properties(dramsim3 PROPERTIES
+target_include_directories(dramsim3obj INTERFACE $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/src> $<INSTALL_INTERFACE:include>)
+target_compile_options(dramsim3obj PRIVATE -Wall)
+target_link_libraries(dramsim3obj PRIVATE inih format)
+set_target_properties(dramsim3obj PROPERTIES
     LIBRARY_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}
     CXX_STANDARD 11
     CXX_STANDARD_REQUIRED YES
     CXX_EXTENSIONS NO
 )
+
+add_library(dramsim3 $<TARGET_OBJECTS:dramsim3obj>)
 
 # trace CPU, .etc
 add_executable(dramsim3main src/main.cc src/cpu.cc)
