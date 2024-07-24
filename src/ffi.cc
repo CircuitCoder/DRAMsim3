@@ -5,14 +5,13 @@ extern "C" {
     void *data,
     const char *config_path,
     const char *sim_path,
-    void (*read_callback)(uint64_t, void *),
-    void (*write_callback)(uint64_t, void *)
+    void (*callback)(void *, uint64_t, bool),
   ) {
     return new dramsim3::MemorySystem(
       config_path,
       sim_path,
-      [=](uint64_t addr) { read_callback(addr, data); },
-      [=](uint64_t addr) { write_callback(addr, data); }
+      [=](uint64_t addr) { callback(data, false, addr); },
+      [=](uint64_t addr) { callback(data, true, addr); }
     );
   }
 
