@@ -39,6 +39,7 @@ add_library(dramsim3obj OBJECT
     src/simple_stats.cc
     src/timing.cc
     src/memory_system.cc
+    src/ffi.cc
 )
 
 if (THERMAL)

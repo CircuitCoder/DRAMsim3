@@ -1,17 +1,17 @@
 #include "memory_system.h"
 
 extern "C" {
-  dramsim3::MemorySystem* ds3_create_memory_system(
+  dramsim3::MemorySystem* ds3_create(
     void *data,
     const char *config_path,
     const char *sim_path,
-    void (*callback)(void *, uint64_t, bool),
+    void (*callback)(void *, uint64_t, bool)
   ) {
     return new dramsim3::MemorySystem(
       config_path,
       sim_path,
-      [=](uint64_t addr) { callback(data, false, addr); },
-      [=](uint64_t addr) { callback(data, true, addr); }
+      [=](uint64_t addr) { callback(data, addr, false); },
+      [=](uint64_t addr) { callback(data, addr, true); }
     );
   }
 
@@ -24,6 +24,10 @@ extern "C" {
   }
 
   bool ds3_add(dramsim3::MemorySystem *sys, uint64_t addr, bool is_write) {
-    return sys->WillAcceptTransaction(addr, is_write);
+    return sys->AddTransaction(addr, is_write);
+  }
+
+  void ds3_drop(dramsim3::MemorySystem *sys) {
+    delete sys;
   }
 }
