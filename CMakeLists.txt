@@ -41,6 +41,7 @@ add_library(dramsim3obj OBJECT
     src/memory_system.cc
     src/ffi.cc
 )
+set_property(TARGET dramsim3obj PROPERTY POSITION_INDEPENDENT_CODE ON)
 
 if (THERMAL)
     # dependency check
