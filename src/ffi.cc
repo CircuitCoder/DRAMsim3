@@ -31,19 +31,19 @@ extern "C" {
     delete sys;
   }
 
-  double ds3_get_tck(dramsim3::MemorySystem *sys) {
+  double ds3_get_tck(const dramsim3::MemorySystem *sys) {
     return sys->GetTCK();
   }
 
-  int ds3_get_bus_bits(dramsim3::MemorySystem *sys) {
+  int ds3_get_bus_bits(const dramsim3::MemorySystem *sys) {
     return sys->GetBusBits();
   }
 
-  int ds3_get_burst_length(dramsim3::MemorySystem *sys) {
+  int ds3_get_burst_length(const dramsim3::MemorySystem *sys) {
     return sys->GetBurstLength();
   }
 
-  int ds3_get_queue_size(dramsim3::MemorySystem *sys) {
+  int ds3_get_queue_size(const dramsim3::MemorySystem *sys) {
     return sys->GetQueueSize();
   }
 }
