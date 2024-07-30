@@ -30,4 +30,20 @@ extern "C" {
   void ds3_drop(dramsim3::MemorySystem *sys) {
     delete sys;
   }
+
+  double ds3_get_tck(dramsim3::MemorySystem *sys) {
+    return sys->GetTCK();
+  }
+
+  int ds3_get_bus_bits(dramsim3::MemorySystem *sys) {
+    return sys->GetBusBits();
+  }
+
+  int ds3_get_burst_length(dramsim3::MemorySystem *sys) {
+    return sys->GetBurstLength();
+  }
+
+  int ds3_get_queue_size(dramsim3::MemorySystem *sys) {
+    return sys->GetQueueSize();
+  }
 }
