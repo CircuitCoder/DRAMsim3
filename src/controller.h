@@ -75,6 +75,7 @@ class Controller {
     uint64_t last_trans_clk_;
 
     // transaction queueing
+    // -1 singify that the previous cycles was blocked due to a WAR hazard
     int write_draining_;
     void ScheduleTransaction();
     void IssueCommand(const Command &tmp_cmd);

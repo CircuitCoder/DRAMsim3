@@ -214,16 +214,18 @@ void Controller::ScheduleTransaction() {
             if (!is_unified_queue_ && cmd.IsWrite()) {
                 // Enforce R->W dependency
                 if (pending_rd_q_.count(it->addr) > 0) {
-                    write_draining_ = 0;
-                    break;
+                    write_draining_ = -1;
+                    return;
                 }
                 write_draining_ -= 1;
             }
             cmd_queue_.AddCommand(cmd);
             queue.erase(it);
-            break;
+            return;
         }
     }
+
+    if (write_draining_ < 0) write_draining_ = 0;
 }
 
 void Controller::IssueCommand(const Command &cmd) {
